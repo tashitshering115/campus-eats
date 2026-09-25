@@ -16,16 +16,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Form submission middleware (Part M1)
 app.use(express.urlencoded({ extended: true }));
 
+// JSON parsing middleware (Lab 5)
+app.use(express.json());
+
 // Routes
 const indexRoutes = require('./routes/index');
 app.use('/', indexRoutes);
 
+// API Routes (Lab 5)
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
+
 app.listen(PORT, () => {
   console.log(`Campus Eats running at http://localhost:${PORT}`);
 });
-
-
-
-
-
-
