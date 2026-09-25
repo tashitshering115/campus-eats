@@ -20,6 +20,16 @@
   </section>
 <% } %>
 
+<!-- Lab 6 :Order Lookup Box -->
+<section class="order-lookup">
+  <h2>Check an Order</h2>
+  <div class="lookup-box">
+    <input type="number" id="orderIdInput" placeholder="Order ID" min="1">
+    <button id="lookupBtn" class="btn">Look Up</button>
+  </div>
+  <p id="lookupResult"></p>
+</section>
+
 <!-- Restaurants List -->
 <section class="restaurants">
   <h2>Restaurants</h2>
@@ -34,5 +44,8 @@
     <% }); %>
   </div>
 </section>
+
+<!-- LAB 6 -->
+<script src="/js/orderLookup.js"></script>
 
 <%- include('partials/footer') %>
