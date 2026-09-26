@@ -4,8 +4,7 @@ const router = express.Router();
 const homeController = require('../controllers/homeController');
 const menuController = require('../controllers/menuController');
 const orderController = require('../controllers/orderController');
-const aboutController = require('../controllers/aboutController'); // <-- THIS LINE WAS MISSING
-
+const aboutController = require('../controllers/aboutController'); 
 // Home route
 router.get('/', homeController.getHome);
 
