@@ -5,10 +5,9 @@ const MenuItem = require('../models/MenuItem');
 exports.createOrder = async (req, res) => {
   const { itemId } = req.body;
   const item = await MenuItem.getMenuItemById(itemId);
-  if (!item) {
-    return res.status(400).send('Invalid menu item.');
-  }
-  const order = await Order.createOrder(item.id, item.price);
+  if (!item) return res.status(400).send('Invalid menu item.');
+  // Pass logged-in user ID as 3rd parameter
+  const order = await Order.createOrder(item.id, item.price, req.session.user.id);
   res.redirect(`/orders/${order.id}`);
 };
 

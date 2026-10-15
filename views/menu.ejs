@@ -1,20 +1,71 @@
+
 <%- include('partials/header') %>
+
 <section class="menu-page">
   <h1>Menu <%= restaurant.name %></h1>
+
   <div class="menu-grid">
     <% menuItems.forEach(item => { %>
       <div class="menu-item">
         <h3><%= item.name %></h3>
         <span class="price">Nu. <%= item.price %></span>
-        
-        <!-- Updated Lab 4 Secure Form -->
+
+        <!-- Existing Lab 4 Order Form -->
         <form method="POST" action="/orders">
           <input type="hidden" name="itemId" value="<%= item.id %>">
           <button type="submit" class="btn">Order Now</button>
         </form>
-        
+
       </div>
     <% }); %>
   </div>
+  <!-- menu-grid ends here -->
+
+  <!-- New Lab 8 Feedback Form -->
+  <div class="feedback-section">
+    <h2>Leave Your Feedback</h2>
+
+    <form
+      method="POST"
+      action="/restaurants/<%= restaurant.id %>/feedback"
+    >
+      <div>
+        <label for="customerName">Your Name:</label>
+        <input
+          type="text"
+          id="customerName"
+          name="customerName"
+          value="<%= user ? user.name : '' %>"
+          required
+        >
+      </div>
+
+      <div>
+        <label for="rating">Rating:</label>
+        <select id="rating" name="rating" required>
+          <option value="">Select a rating</option>
+          <option value="5">5 - Excellent</option>
+          <option value="4">4 - Very Good</option>
+          <option value="3">3 - Good</option>
+          <option value="2">2 - Fair</option>
+          <option value="1">1 - Poor</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="comment">Comment (optional):</label>
+        <textarea
+          id="comment"
+          name="comment"
+          rows="4"
+          placeholder="Tell us about your experience..."
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn">Submit Feedback</button>
+    </form>
+  </div>
+
 </section>
+
 <%- include('partials/footer') %>

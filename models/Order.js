@@ -1,19 +1,17 @@
 const db = require('../config/db');
 
 // CREATE: Uses db.tx transaction to insert order and bump times_ordered atomically
-exports.createOrder = (menuItemId, price) => {
+exports.createOrder = (menuItemId, price, customerId) => {
   return db.tx(async (t) => {
     const order = await t.one(
-      'INSERT INTO orders (menu_item_id, quantity, price_at_order) VALUES ($1, 1, $2) RETURNING *',
-      [menuItemId, price]
+      'INSERT INTO orders (menu_item_id, quantity, price_at_order, customer_id) VALUES ($1, 1, $2, $3) RETURNING *',
+      [menuItemId, price, customerId]
     );
-    await t.none(
-      'UPDATE menu_items SET times_ordered = times_ordered + 1 WHERE id = $1',
-      [menuItemId]
-    );
+    await t.none('UPDATE menu_items SET times_ordered = times_ordered + 1 WHERE id = $1', [menuItemId]);
     return order;
   });
 };
+
 
 // READ: Retrieves order joined with menu_items to get item name
 exports.getOrderById = (id) => {

@@ -1,7 +1,13 @@
+
+const session = require('express-session');
 const express = require('express');
 const path = require('path');
 const dotenv = require('dotenv');
+
 dotenv.config();
+
+// Import MongoDB connection
+const { connectMongo } = require('./config/mongo');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -13,20 +19,38 @@ app.set('views', path.join(__dirname, 'views'));
 // Static files (CSS, client-side JS)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Form submission middleware (Part M1)
+// Form submission & JSON middleware
 app.use(express.urlencoded({ extended: true }));
-
-// JSON parsing middleware (Lab 5)
 app.use(express.json());
 
-// Routes
+// Session middleware (Lab 7)
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'campus-eats-dev-secret',
+  resave: false,
+  saveUninitialized: false,
+}));
+
+// Make logged-in user session data available to all EJS templates
+app.use((req, res, next) => {
+  res.locals.user = req.session.user || null;
+  next();
+});
+
+// Import Routers & Middleware
+const { requireAuth, requireAdmin, requireSuperAdmin } = require('./middleware/auth');
+const authRouter = require('./routes/auth');
 const indexRoutes = require('./routes/index');
+
+// Mount Routes
 app.use('/', indexRoutes);
+app.use('/', authRouter);
 
-// API Routes (Lab 5)
-const apiRoutes = require('./routes/api');
-app.use('/api', apiRoutes);
+// Connect to MongoDB
+connectMongo().catch(err => {
+  console.error('MongoDB connection failed:', err);
+});
 
+// Start Server
 app.listen(PORT, () => {
   console.log(`Campus Eats running at http://localhost:${PORT}`);
 });
